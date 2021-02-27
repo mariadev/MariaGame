@@ -23,6 +23,11 @@ class GameScene: SKScene {
     var moon : SKNode?
 //    var stars : SKNode?
     
+    
+    let jumpUpAction = SKAction.moveBy(x: 0, y: 60, duration: 0.2)
+    // move down 20
+    let jumpDownAction = SKAction.moveBy(x: 0, y: -60, duration: 0.2)
+    
     // Boolean
     var joystickAction = false
     var rewardIsNotTouched = true
@@ -50,10 +55,7 @@ class GameScene: SKScene {
     // didmove
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
-//
-//        let soundAction = SKAction.repeatForever(SKAction.playSoundFileNamed("music2.wav", waitForCompletion: false))
-//        run(soundAction)
-//        run(Sound.game.musicGame)
+
         let backgroundMusic = SKAudioNode(fileNamed: "music.wav")
         backgroundMusic.autoplayLooped = true
         addChild(backgroundMusic)
@@ -68,7 +70,6 @@ class GameScene: SKScene {
         mountains3 = childNode(withName: "mountains3")
         moon = childNode(withName: "moon")
 //        stars = childNode(withName: "stars")
-        
         playerStateMachine = GKStateMachine(states: [
             JumpingState(playerNode: player!),
             WalkingState(playerNode: player!),
@@ -82,12 +83,11 @@ class GameScene: SKScene {
         // Hearts
         heartContainer.position = CGPoint(x: -300, y: 140)
         heartContainer.zPosition = 5
-        scoreLabel.zPosition = 5
         cameraNode?.addChild(heartContainer)
         fillHearts(count: 3)
         
         // Timer
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: true) {(timer) in
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) {(timer) in
             self.spawnMeteor()
         }
         
@@ -95,6 +95,7 @@ class GameScene: SKScene {
         scoreLabel.position = CGPoint(x: (cameraNode?.position.x)! + 310, y: 140)
         scoreLabel.fontColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
         scoreLabel.fontSize = 24
+        scoreLabel.zPosition = 5
         scoreLabel.fontName = "AvenirNext-Bold"
         scoreLabel.horizontalAlignmentMode = .right
         scoreLabel.text = String(score)
@@ -107,6 +108,7 @@ class GameScene: SKScene {
 // MARK: Touches
 extension GameScene {
     // Touch Began
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             if let joystickKnob = joystickKnob {
@@ -116,11 +118,12 @@ extension GameScene {
             
             let location = touch.location(in: self)
             if !(joystick?.contains(location))! {
-                print("Touch" ,index)
                 playerStateMachine.enter(JumpingState.self)
+                // sequence of move yup then down
+                let jumpSequence = SKAction.sequence([jumpUpAction, jumpDownAction])
+                player?.run(jumpSequence)
                 run(Sound.jump.action)
-                index = index + 1
-            }
+            } 
         }
     }
     
@@ -160,6 +163,59 @@ extension GameScene {
 
 // MARK: Action
 extension GameScene {
+    
+    func movingPlayerAndBackGroundXAxis () {
+        cameraNode?.position.x = player!.position.x
+        joystick?.position.y = (cameraNode?.position.y)! - 100
+        joystick?.position.x = (cameraNode?.position.x)! - 225
+        
+        // Player movement
+        guard let joystickKnob = joystickKnob else { return }
+        let xPosition = Double(joystickKnob.position.x)
+        let positivePosition = xPosition < 0 ? -xPosition : xPosition
+        
+        if floor(positivePosition) != 0 {
+            playerStateMachine.enter(WalkingState.self)
+        } else {
+            playerStateMachine.enter(IdleState.self)
+        }
+        
+        let displacement = CGVector(dx: 0.016 * xPosition * playerSpeed, dy: 0)
+        let move = SKAction.move(by: displacement, duration: 0)
+        let faceAction : SKAction!
+        let movingRight = xPosition > 0
+        let movingLeft = xPosition < 0
+        if movingLeft && playerIsFacingRight {
+            playerIsFacingRight = false
+            let faceMovement = SKAction.scaleX(to: -1, duration: 0.0)
+            faceAction = SKAction.sequence([move, faceMovement])
+        }
+        else if movingRight && !playerIsFacingRight {
+            playerIsFacingRight = true
+            let faceMovement = SKAction.scaleX(to: 1, duration: 0.0)
+            faceAction = SKAction.sequence([move, faceMovement])
+        } else {
+            faceAction = move
+        }
+        player?.run(faceAction)
+        
+        let displacementParallax1 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
+        let parallax1 = SKAction.move(by: displacementParallax1, duration: 0)
+        mountains1?.run(parallax1)
+
+        let displacementParallax2 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
+        let parallax2 = SKAction.move(by: displacementParallax2, duration: 0)
+        mountains2?.run(parallax2)
+
+        let displacementParallax3 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
+        let parallax3 = SKAction.move(by: displacementParallax3, duration: 0)
+        mountains3?.run(parallax3)
+
+        
+        let displacementParallax4 = SKAction.moveTo(x: (cameraNode?.position.x)!, duration: 0.0)
+        moon?.run( displacementParallax4 )
+
+    }
     
     func resetKnobPosition() {
         let initialPoint = CGPoint(x: 0, y: 0)
@@ -219,6 +275,13 @@ extension GameScene {
         fillHearts(count: 3)
     }
     
+    func showWinnerScene() {
+        Timer.scheduledTimer(withTimeInterval: 4, repeats: true) {(timer) in
+            let gameOverScene = GameOver(fileNamed: "Winner")
+            self.view?.presentScene(gameOverScene)
+        }
+    }
+    
     func showDieScene() {
         let gameOverScene = GameOver(fileNamed: "GameOver")
         self.view?.presentScene(gameOverScene)
@@ -227,66 +290,8 @@ extension GameScene {
 // MARK: Game Loop
 extension GameScene {
     override func update(_ currentTime: TimeInterval) {
-        //        let deltaTime = currentTime - previousTimeInterval
-        //        previousTimeInterval = currentTime
-        //        guard let joystickKnob = joystickKnob else { return }
-        //        let xPosition = Double(joystickKnob.position.x)
-        //        let displacement = CGVector(dx: deltaTime * xPosition * playerSpeed, dy: 0)
-        
-        rewardIsNotTouched = true
-        // Camera
-        cameraNode?.position.x = player!.position.x
-        joystick?.position.y = (cameraNode?.position.y)! - 100
-        joystick?.position.x = (cameraNode?.position.x)! - 300
-        
-        // Player movement
-        guard let joystickKnob = joystickKnob else { return }
-        let xPosition = Double(joystickKnob.position.x)
-        let positivePosition = xPosition < 0 ? -xPosition : xPosition
-        
-        if floor(positivePosition) != 0 {
-            playerStateMachine.enter(WalkingState.self)
-        } else {
-            playerStateMachine.enter(IdleState.self)
-        }
-        
-        let displacement = CGVector(dx: 0.016 * xPosition * playerSpeed, dy: 0)
-        let move = SKAction.move(by: displacement, duration: 0)
-        let faceAction : SKAction!
-        let movingRight = xPosition > 0
-        let movingLeft = xPosition < 0
-        if movingLeft && playerIsFacingRight {
-            playerIsFacingRight = false
-            let faceMovement = SKAction.scaleX(to: -1, duration: 0.0)
-            faceAction = SKAction.sequence([move, faceMovement])
-        }
-        else if movingRight && !playerIsFacingRight {
-            playerIsFacingRight = true
-            let faceMovement = SKAction.scaleX(to: 1, duration: 0.0)
-            faceAction = SKAction.sequence([move, faceMovement])
-        } else {
-            faceAction = move
-        }
-        player?.run(faceAction)
-        
-        let displacementParallax1 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
-        let parallax1 = SKAction.move(by: displacementParallax1, duration: 0)
-        mountains1?.run(parallax1)
-
-        let displacementParallax2 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
-        let parallax2 = SKAction.move(by: displacementParallax2, duration: 0)
-        mountains2?.run(parallax2)
-
-        let displacementParallax3 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
-        let parallax3 = SKAction.move(by: displacementParallax3, duration: 0)
-        mountains3?.run(parallax3)
-
-        
-        let displacementParallax4 = SKAction.moveTo(x: (cameraNode?.position.x)!, duration: 0.0)
-        moon?.run( displacementParallax4 )
-        
-//        let parallax5 = SKAction.moveTo(x: (cameraNode?.position.x)!, duration: 0.0)
-//        stars?.run(parallax5)
+        movingPlayerAndBackGroundXAxis ()
+            
     }
     
 }
@@ -297,7 +302,7 @@ extension GameScene: SKPhysicsContactDelegate {
     struct Collision {
         
         enum Masks: Int {
-            case killing, player, reward, ground
+            case killing, player, reward, ground, win
             var bitmask: UInt32 { return 1 << self.rawValue }
         }
         
@@ -328,20 +333,37 @@ extension GameScene: SKPhysicsContactDelegate {
         
         if collision.matches(.player, .reward) {
             
-            if contact.bodyA.node?.name == "jewel" {
+            if contact.bodyA.node?.name == "computer" {
                 contact.bodyA.node?.physicsBody?.categoryBitMask = 0
+                contact.bodyA.node?.removeFromParent()
+                run(Sound.reward.action)
             
             }
-            else if contact.bodyB.node?.name == "jewel" {
+            else if contact.bodyB.node?.name == "computer" {
                 contact.bodyB.node?.physicsBody?.categoryBitMask = 0
-                contact.bodyB.node?.removeFromParent()
-                run(Sound.reward.action)
             }
             
             if rewardIsNotTouched {
                 rewardTouch()
                 rewardIsNotTouched = false
             }
+        }
+        
+        if collision.matches(.player, .win) {
+
+            if contact.bodyA.node?.name == "player" {
+                run(Sound.reward.action)
+                if score >= 1 {
+                    contact.bodyA.node?.physicsBody?.categoryBitMask = 0
+                    contact.bodyA.node?.removeFromParent()
+                    showWinnerScene()
+                }
+
+            }
+            else if contact.bodyB.node?.name == "house" {
+                contact.bodyB.node?.physicsBody?.categoryBitMask = 0            }
+
+
         }
         
         if collision.matches(.ground, .killing) {
@@ -366,8 +388,8 @@ extension GameScene {
         
         let node = SKSpriteNode(imageNamed: "meteor")
         node.name = "Meteor"
-        let randomXPosition = Int(arc4random_uniform(UInt32(self.size.width)))
-        
+
+        let randomXPosition = Int(arc4random_uniform(UInt32(2350)))
         node.position = CGPoint(x: randomXPosition, y: 270)
         node.anchorPoint = CGPoint(x: 0.5, y: 0.1)
         node.zPosition = 5
