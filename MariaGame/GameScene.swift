@@ -24,9 +24,9 @@ class GameScene: SKScene {
 //    var stars : SKNode?
     
     
-    let jumpUpAction = SKAction.moveBy(x: 0, y: 60, duration: 0.2)
+    let jumpUpAction = SKAction.moveBy(x: 0, y: 200, duration: 0.3)
     // move down 20
-    let jumpDownAction = SKAction.moveBy(x: 0, y: -60, duration: 0.2)
+    let jumpDownAction = SKAction.moveBy(x: 0, y: -60, duration: 0.3)
     
     // Boolean
     var joystickAction = false
@@ -71,6 +71,7 @@ class GameScene: SKScene {
         moon = childNode(withName: "moon")
 //        stars = childNode(withName: "stars")
         playerStateMachine = GKStateMachine(states: [
+            JumpingState(playerNode: player!),
             JumpingState(playerNode: player!),
             WalkingState(playerNode: player!),
             IdleState(playerNode: player!),
@@ -118,9 +119,11 @@ extension GameScene {
             
             let location = touch.location(in: self)
             if !(joystick?.contains(location))! {
+//                playerStateMachine.enter(JumpingState.self)
                 playerStateMachine.enter(JumpingState.self)
                 // sequence of move yup then down
-                let jumpSequence = SKAction.sequence([jumpUpAction, jumpDownAction])
+//                let jumpSequence = SKAction.sequence([jumpUpAction, jumpDownAction])
+                let jumpSequence = SKAction.sequence([jumpUpAction])
                 player?.run(jumpSequence)
                 run(Sound.jump.action)
             } 
@@ -276,8 +279,8 @@ extension GameScene {
     }
     
     func showWinnerScene() {
-        Timer.scheduledTimer(withTimeInterval: 4, repeats: true) {(timer) in
-            let gameOverScene = GameOver(fileNamed: "Winner")
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {(timer) in
+            let gameOverScene = Winner(fileNamed: "Winner")
             self.view?.presentScene(gameOverScene)
         }
     }
@@ -323,7 +326,7 @@ extension GameScene: SKPhysicsContactDelegate {
             loseHeart()
             isHit = true
             run(Sound.hit.action)
-            
+        
             playerStateMachine.enter(StunnedState.self)
         }
         
@@ -350,18 +353,20 @@ extension GameScene: SKPhysicsContactDelegate {
         }
         
         if collision.matches(.player, .win) {
-
-            if contact.bodyA.node?.name == "player" {
-                run(Sound.reward.action)
+print("colliosion house")
+            if contact.bodyA.node?.name == "house" {
+                print("bodya house")
                 if score >= 1 {
-                    contact.bodyA.node?.physicsBody?.categoryBitMask = 0
-                    contact.bodyA.node?.removeFromParent()
+                    contact.bodyB.node?.physicsBody?.categoryBitMask = 0
+                    contact.bodyB.node?.removeFromParent()
+                    run(Sound.reward.action)
                     showWinnerScene()
                 }
 
             }
             else if contact.bodyB.node?.name == "house" {
-                contact.bodyB.node?.physicsBody?.categoryBitMask = 0            }
+                print("bodyb house")
+                contact.bodyA.node?.physicsBody?.categoryBitMask = 0            }
 
 
         }
