@@ -20,13 +20,10 @@ class GameScene: SKScene {
     var mountains1 : SKNode?
     var mountains2 : SKNode?
     var mountains3 : SKNode?
-    var moon : SKNode?
-//    var stars : SKNode?
+    var sun : SKNode?
     
-    
+    // Jump Action
     let jumpUpAction = SKAction.moveBy(x: 0, y: 200, duration: 0.3)
-    // move down 20
-    let jumpDownAction = SKAction.moveBy(x: 0, y: -60, duration: 0.3)
     
     // Boolean
     var joystickAction = false
@@ -55,7 +52,7 @@ class GameScene: SKScene {
     // didmove
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
-
+        
         let backgroundMusic = SKAudioNode(fileNamed: "music.wav")
         backgroundMusic.autoplayLooped = true
         addChild(backgroundMusic)
@@ -65,11 +62,11 @@ class GameScene: SKScene {
         joystick = childNode(withName: "joystick")
         joystickKnob = joystick?.childNode(withName: "knob")
         cameraNode = childNode(withName: "cameraNode") as? SKCameraNode
-        mountains1 = childNode(withName: "mountains1")
-        mountains2 = childNode(withName: "mountains2")
-        mountains3 = childNode(withName: "mountains3")
-        moon = childNode(withName: "moon")
-//        stars = childNode(withName: "stars")
+        mountains1 = childNode(withName: "mountain1")
+        mountains2 = childNode(withName: "mountain2")
+        mountains3 = childNode(withName: "mountain3")
+        sun = childNode(withName: "sun")
+
         playerStateMachine = GKStateMachine(states: [
             JumpingState(playerNode: player!),
             JumpingState(playerNode: player!),
@@ -77,7 +74,7 @@ class GameScene: SKScene {
             IdleState(playerNode: player!),
             LandingState(playerNode: player!),
             StunnedState(playerNode: player!),
-            ])
+        ])
         
         playerStateMachine.enter(IdleState.self)
         
@@ -93,14 +90,14 @@ class GameScene: SKScene {
         }
         
         if (cameraNode?.position.x) != nil {
-        scoreLabel.position = CGPoint(x: (cameraNode?.position.x)! + 310, y: 140)
-        scoreLabel.fontColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
-        scoreLabel.fontSize = 24
-        scoreLabel.zPosition = 5
-        scoreLabel.fontName = "AvenirNext-Bold"
-        scoreLabel.horizontalAlignmentMode = .right
-        scoreLabel.text = String(score)
-        cameraNode?.addChild(scoreLabel)
+            scoreLabel.position = CGPoint(x: (cameraNode?.position.x)! + 310, y: 140)
+            scoreLabel.fontColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+            scoreLabel.fontSize = 24
+            scoreLabel.zPosition = 5
+            scoreLabel.fontName = "AvenirNext-Bold"
+            scoreLabel.horizontalAlignmentMode = .right
+            scoreLabel.text = String(score)
+            cameraNode?.addChild(scoreLabel)
         }
     }
 }
@@ -119,10 +116,8 @@ extension GameScene {
             
             let location = touch.location(in: self)
             if !(joystick?.contains(location))! {
-//                playerStateMachine.enter(JumpingState.self)
                 playerStateMachine.enter(JumpingState.self)
                 // sequence of move yup then down
-//                let jumpSequence = SKAction.sequence([jumpUpAction, jumpDownAction])
                 let jumpSequence = SKAction.sequence([jumpUpAction])
                 player?.run(jumpSequence)
                 run(Sound.jump.action)
@@ -205,19 +200,18 @@ extension GameScene {
         let displacementParallax1 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
         let parallax1 = SKAction.move(by: displacementParallax1, duration: 0)
         mountains1?.run(parallax1)
-
+        
         let displacementParallax2 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
         let parallax2 = SKAction.move(by: displacementParallax2, duration: 0)
         mountains2?.run(parallax2)
-
+        
         let displacementParallax3 = CGVector(dx: (0.016 * xPosition * playerSpeed) / -20, dy: 0)
         let parallax3 = SKAction.move(by: displacementParallax3, duration: 0)
         mountains3?.run(parallax3)
-
         
         let displacementParallax4 = SKAction.moveTo(x: (cameraNode?.position.x)!, duration: 0.0)
-        moon?.run( displacementParallax4 )
-
+        sun?.run( displacementParallax4 )
+        
     }
     
     func resetKnobPosition() {
@@ -290,11 +284,12 @@ extension GameScene {
         self.view?.presentScene(gameOverScene)
     }
 }
+
 // MARK: Game Loop
 extension GameScene {
     override func update(_ currentTime: TimeInterval) {
         movingPlayerAndBackGroundXAxis ()
-            
+        
     }
     
 }
@@ -313,7 +308,7 @@ extension GameScene: SKPhysicsContactDelegate {
         
         func matches (_ first: Masks, _ second: Masks) -> Bool {
             return (first.bitmask == masks.first && second.bitmask == masks.second) ||
-            (first.bitmask == masks.second && second.bitmask == masks.first)
+                (first.bitmask == masks.second && second.bitmask == masks.first)
         }
     }
     
@@ -326,7 +321,7 @@ extension GameScene: SKPhysicsContactDelegate {
             loseHeart()
             isHit = true
             run(Sound.hit.action)
-        
+            
             playerStateMachine.enter(StunnedState.self)
         }
         
@@ -340,10 +335,12 @@ extension GameScene: SKPhysicsContactDelegate {
                 contact.bodyA.node?.physicsBody?.categoryBitMask = 0
                 contact.bodyA.node?.removeFromParent()
                 run(Sound.reward.action)
-            
+                
             }
             else if contact.bodyB.node?.name == "computer" {
                 contact.bodyB.node?.physicsBody?.categoryBitMask = 0
+                contact.bodyB.node?.removeFromParent()
+                run(Sound.reward.action)
             }
             
             if rewardIsNotTouched {
@@ -353,22 +350,25 @@ extension GameScene: SKPhysicsContactDelegate {
         }
         
         if collision.matches(.player, .win) {
-print("colliosion house")
             if contact.bodyA.node?.name == "house" {
-                print("bodya house")
                 if score >= 1 {
                     contact.bodyB.node?.physicsBody?.categoryBitMask = 0
                     contact.bodyB.node?.removeFromParent()
                     run(Sound.reward.action)
                     showWinnerScene()
                 }
-
+                
             }
             else if contact.bodyB.node?.name == "house" {
-                print("bodyb house")
-                contact.bodyA.node?.physicsBody?.categoryBitMask = 0            }
-
-
+                if score >= 1 {
+                    contact.bodyA.node?.physicsBody?.categoryBitMask = 0
+                    contact.bodyA.node?.removeFromParent()
+                    run(Sound.reward.action)
+                    showWinnerScene()
+                }
+            }
+            
+            
         }
         
         if collision.matches(.ground, .killing) {
@@ -393,7 +393,7 @@ extension GameScene {
         
         let node = SKSpriteNode(imageNamed: "meteor")
         node.name = "Meteor"
-
+        
         let randomXPosition = Int(arc4random_uniform(UInt32(2350)))
         node.position = CGPoint(x: randomXPosition, y: 270)
         node.anchorPoint = CGPoint(x: 0.5, y: 0.1)
@@ -428,7 +428,7 @@ extension GameScene {
             SKAction.wait(forDuration: 3.0),
             SKAction.fadeOut(withDuration: 0.2),
             SKAction.removeFromParent(),
-            ])
+        ])
         
         node.run(action)
     }

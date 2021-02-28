@@ -24,63 +24,27 @@ class PlayerState: GKState {
 class JumpingState : PlayerState {
     
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
-//
-
+        
         if stateClass is StunnedState.Type { return true }
-//
+        
         if hasFinishedJumping && stateClass is LandingState.Type { return true }
         return false
     }
     
-//    let textures = SKTexture(imageNamed: "jump/jump0")
     let textures = SKTexture(imageNamed: "jump/jump0")
     lazy var action = { SKAction.animate(with: [textures], timePerFrame: 0.2)} ()
-//    lazy var action = { SKAction.animate(with: [textures], timePerFrame: 0.1)} ()
-//    let textures : Array<SKTexture> = (0...1).map({ return "jump/jump\($0)"}).map(SKTexture.init)
-//
-//    lazy var action = { SKAction.animate(with: textures, timePerFrame: 0.2)} ()
     
     override func didEnter(from previousState: GKState?) {
         
         playerNode.removeAction(forKey: characterAnimationKey)
         playerNode.run(action, withKey: characterAnimationKey)
         hasFinishedJumping = false
-//        playerNode.run(.applyForce(CGVector(dx: 0, dy: 75), duration: 0.3))
         
         Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) {(timer) in
             self.hasFinishedJumping = true
         }
     }
 }
-
-//class LongJumpingState : PlayerState {
-//    var hasFinishedJumping : Bool = false
-//
-//    override func isValidNextState(_ stateClass: AnyClass) -> Bool {
-////
-//
-//        if stateClass is StunnedState.Type { return true }
-////
-//        if hasFinishedJumping && stateClass is LandingState.Type { return true }
-//        return false
-//    }
-//
-//    let textures : Array<SKTexture> = (0..<1).map({ return "jump/jump\($0)"}).map(SKTexture.init)
-//
-//    lazy var action = { SKAction.animate(with: textures, timePerFrame: 0.2)} ()
-//
-//    override func didEnter(from previousState: GKState?) {
-//
-//        playerNode.removeAction(forKey: characterAnimationKey)
-//        playerNode.run(action, withKey: characterAnimationKey)
-//        hasFinishedJumping = false
-//        playerNode.run(.applyForce(CGVector(dx: 0, dy: 75), duration: 0.1))
-//
-//        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) {(timer) in
-//            self.hasFinishedJumping = true
-//        }
-//    }
-//}
 
 class LandingState : PlayerState {
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
@@ -102,7 +66,7 @@ class IdleState : PlayerState {
         default: return true
         }
     }
-//
+    
     let textures = SKTexture(imageNamed: "player/0")
     lazy var action = { SKAction.animate(with: [textures], timePerFrame: 0.1)} ()
     
@@ -114,7 +78,7 @@ class IdleState : PlayerState {
 
 class WalkingState : PlayerState {
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
-      
+        
         switch stateClass {
         case is LandingState.Type, is WalkingState.Type : return false
         default: return true
@@ -149,8 +113,7 @@ class StunnedState : PlayerState {
         .wait(forDuration: 0.25),
         .fadeAlpha(to: 1.0, duration: 0.01),
         .wait(forDuration: 0.25),
-//        .animate(with: [SKTexture(imageNamed: "player/0")], timePerFrame: 0.1),
-        ]), count: 5)
+    ]), count: 5)
     
     override func didEnter(from previousState: GKState?) {
         isStunned = true

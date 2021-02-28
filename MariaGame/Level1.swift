@@ -31,14 +31,14 @@ class Level1 : GameScene {
         super.touchesEnded(touches, with: event)
     }
     
-    override func update(_ currentTime: TimeInterval) {
-        
-        super.update(currentTime)
-        if score >= 1 {
+//    override func update(_ currentTime: TimeInterval) {
+//        
+//        super.update(currentTime)
+//        if score >= 1 {
 //            let nextLevel = GameScene(fileNamed: "Level2")
 //            nextLevel?.scaleMode = .aspectFill
 //            view?.presentScene(nextLevel)
 //            run(Sound.levelUp.action)
-        }
-    }
+//        }
+//    }
 }
