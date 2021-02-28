@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4C02836425EAEEC300C7C725 /* Winner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02836325EAEEC300C7C725 /* Winner.swift */; };
 		4C02836825EAEED500C7C725 /* Winner.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C02836725EAEED500C7C725 /* Winner.sks */; };
+		4C02836C25EC3AA100C7C725 /* winSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C02836B25EC3AA100C7C725 /* winSound.wav */; };
 		4C137A9925E46B5600085054 /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C137A9825E46B5600085054 /* Sound.swift */; };
 		4C137A9F25E4741000085054 /* GameOver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C137A9E25E4741000085054 /* GameOver.swift */; };
 		4C137AB625E6B8E800085054 /* GameOver.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C137AB525E6B8E800085054 /* GameOver.sks */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		4C02836325EAEEC300C7C725 /* Winner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Winner.swift; sourceTree = "<group>"; };
 		4C02836725EAEED500C7C725 /* Winner.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Winner.sks; sourceTree = "<group>"; };
+		4C02836B25EC3AA100C7C725 /* winSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = winSound.wav; sourceTree = "<group>"; };
 		4C137A9825E46B5600085054 /* Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sound.swift; sourceTree = "<group>"; };
 		4C137A9E25E4741000085054 /* GameOver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOver.swift; sourceTree = "<group>"; };
 		4C137AB525E6B8E800085054 /* GameOver.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOver.sks; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 		4C3CFBBA25EAD9120085F165 /* sound */ = {
 			isa = PBXGroup;
 			children = (
+				4C02836B25EC3AA100C7C725 /* winSound.wav */,
 				4C137AC625E6D18700085054 /* hitSound.wav */,
 				4C137AC925E6D18E00085054 /* jumpSound.wav */,
 				4C137ACC25E6D19200085054 /* levelUpSound.wav */,
@@ -183,6 +186,7 @@
 				4C137ACA25E6D18E00085054 /* jumpSound.wav in Resources */,
 				4C137AD925E6D5BF00085054 /* music2.wav in Resources */,
 				4C137ADE25E6E64700085054 /* gameOverSound.wav in Resources */,
+				4C02836C25EC3AA100C7C725 /* winSound.wav in Resources */,
 				4C137AB625E6B8E800085054 /* GameOver.sks in Resources */,
 				4C02836825EAEED500C7C725 /* Winner.sks in Resources */,
 				4C137ACD25E6D19200085054 /* levelUpSound.wav in Resources */,

@@ -51,13 +51,30 @@ class GameScene: SKScene {
     
     // didmove
     override func didMove(to view: SKView) {
-        physicsWorld.contactDelegate = self
+        
+        var audioPlayer: AVAudioPlayer!
+
+        guard let path = Bundle.main.path(forResource: "music", ofType: "wav") else {
+                print("can not find path")
+                return
+            }
+            let url = URL(fileURLWithPath: path)
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback)
+                audioPlayer = try AVAudioPlayer(contentsOf: url)
+            } catch {
+                print("some thing went wrong: \(error)")
+            }
+        
+            audioPlayer!.prepareToPlay()
         
         let backgroundMusic = SKAudioNode(fileNamed: "music.wav")
         backgroundMusic.autoplayLooped = true
         addChild(backgroundMusic)
-        
         audioPlayer.play()
+        
+        physicsWorld.contactDelegate = self
+        
         player = childNode(withName: "player")
         joystick = childNode(withName: "joystick")
         joystickKnob = joystick?.childNode(withName: "knob")
@@ -68,7 +85,6 @@ class GameScene: SKScene {
         sun = childNode(withName: "sun")
 
         playerStateMachine = GKStateMachine(states: [
-            JumpingState(playerNode: player!),
             JumpingState(playerNode: player!),
             WalkingState(playerNode: player!),
             IdleState(playerNode: player!),
@@ -116,11 +132,12 @@ extension GameScene {
             
             let location = touch.location(in: self)
             if !(joystick?.contains(location))! {
+                run(Sound.jump.action)
+                
                 playerStateMachine.enter(JumpingState.self)
                 // sequence of move yup then down
                 let jumpSequence = SKAction.sequence([jumpUpAction])
                 player?.run(jumpSequence)
-                run(Sound.jump.action)
             } 
         }
     }

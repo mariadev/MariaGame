@@ -9,7 +9,7 @@ import Foundation
 import SpriteKit
 
 enum Sound : String {
-    case hit, jump, levelUp, meteorFalling, reward, game , gameOver
+    case hit, jump, levelUp, meteorFalling, reward, game , gameOver, win
     
     var action : SKAction {
         return SKAction.playSoundFileNamed(rawValue + "Sound.wav", waitForCompletion: false)
@@ -19,9 +19,5 @@ enum Sound : String {
         return SKAction.playSoundFileNamed("music.wav", waitForCompletion: false)
     }
    
-}
-
-extension SKAction {
-    static let playGameMusic : SKAction = repeatForever(playSoundFileNamed("music2.wav", waitForCompletion: false))
 }
 
