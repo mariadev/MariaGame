@@ -8,11 +8,11 @@
 import Foundation
 import SpriteKit
 
-class GameOver : SKScene {
+class GameOver: SKScene {
 
     override func sceneDidLoad() {
         run(Sound.gameOver.action)
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { (timer) in
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { (_) in
             let level1 = GameScene(fileNamed: "Level1")
             self.view?.presentScene(level1)
             self.removeAllActions()

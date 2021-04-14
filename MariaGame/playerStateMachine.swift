@@ -8,20 +8,20 @@
 import Foundation
 import GameplayKit
 
-fileprivate let characterAnimationKey = "Sprite Animation"
+private let characterAnimationKey = "Sprite Animation"
 
 class PlayerState: GKState {
-    var hasFinishedJumping : Bool = false
+    var hasFinishedJumping: Bool = false
     unowned var playerNode: SKNode
     
-    init(playerNode : SKNode){
+    init(playerNode: SKNode) {
         self.playerNode = playerNode
         
         super.init()
     }
 }
 
-class JumpingState : PlayerState {
+class JumpingState: PlayerState {
     
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
         
@@ -32,7 +32,7 @@ class JumpingState : PlayerState {
     }
     
     let textures = SKTexture(imageNamed: "jump/jump0")
-    lazy var action = { SKAction.animate(with: [textures], timePerFrame: 0.2)} ()
+    lazy var action = { SKAction.animate(with: [textures], timePerFrame: 0.2)}()
     
     override func didEnter(from previousState: GKState?) {
         
@@ -40,13 +40,13 @@ class JumpingState : PlayerState {
         playerNode.run(action, withKey: characterAnimationKey)
         hasFinishedJumping = false
         
-        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) {(timer) in
+        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) {(_) in
             self.hasFinishedJumping = true
         }
     }
 }
 
-class LandingState : PlayerState {
+class LandingState: PlayerState {
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
         switch stateClass {
         case is LandingState.Type, is JumpingState.Type: return false
@@ -59,7 +59,7 @@ class LandingState : PlayerState {
     }
 }
 
-class IdleState : PlayerState {
+class IdleState: PlayerState {
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
         switch stateClass {
         case is LandingState.Type, is IdleState.Type: return false
@@ -68,7 +68,7 @@ class IdleState : PlayerState {
     }
     
     let textures = SKTexture(imageNamed: "player/0")
-    lazy var action = { SKAction.animate(with: [textures], timePerFrame: 0.1)} ()
+    lazy var action = { SKAction.animate(with: [textures], timePerFrame: 0.1)}()
     
     override func didEnter(from previousState: GKState?) {
         playerNode.removeAction(forKey: characterAnimationKey)
@@ -76,7 +76,7 @@ class IdleState : PlayerState {
     }
 }
 
-class WalkingState : PlayerState {
+class WalkingState: PlayerState {
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
         
         switch stateClass {
@@ -85,8 +85,8 @@ class WalkingState : PlayerState {
         }
     }
     
-    let textures : Array<SKTexture> = (0..<10).map({ return "player/\($0)"}).map(SKTexture.init)
-    lazy var action = { SKAction.repeatForever(.animate(with: textures, timePerFrame: 0.1))} ()
+    let textures: [SKTexture] = (0..<10).map({ return "player/\($0)"}).map(SKTexture.init)
+    lazy var action = { SKAction.repeatForever(.animate(with: textures, timePerFrame: 0.1))}()
     
     override func didEnter(from previousState: GKState?) {
         
@@ -95,9 +95,9 @@ class WalkingState : PlayerState {
     }
 }
 
-class StunnedState : PlayerState {
+class StunnedState: PlayerState {
     
-    var isStunned : Bool = false
+    var isStunned: Bool = false
     
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
         
@@ -112,42 +112,15 @@ class StunnedState : PlayerState {
         .fadeAlpha(to: 0.5, duration: 0.01),
         .wait(forDuration: 0.25),
         .fadeAlpha(to: 1.0, duration: 0.01),
-        .wait(forDuration: 0.25),
+        .wait(forDuration: 0.25)
     ]), count: 5)
     
     override func didEnter(from previousState: GKState?) {
         isStunned = true
         playerNode.run(action)
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { (timer) in
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { (_) in
             self.isStunned = false
             self.stateMachine?.enter(LandingState.self)
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

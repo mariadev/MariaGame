@@ -8,16 +8,15 @@
 import Foundation
 import SpriteKit
 
-enum Sound : String {
-    case hit, jump, levelUp, meteorFalling, reward, game , gameOver, win
+enum Sound: String {
+    case hit, jump, levelUp, meteorFalling, reward, game, gameOver, win
     
-    var action : SKAction {
+    var action: SKAction {
         return SKAction.playSoundFileNamed(rawValue + "Sound.wav", waitForCompletion: false)
     }
     
-    var musicGame : SKAction {
+    var musicGame: SKAction {
         return SKAction.playSoundFileNamed("music.wav", waitForCompletion: false)
     }
    
 }
-

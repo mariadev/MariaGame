@@ -5,11 +5,10 @@
 //  Created by Maria on 24/02/2021.
 //
 
-
 import Foundation
 import SpriteKit
 
-class Level1 : GameScene {
+class Level1: GameScene {
     
     override func didMove(to view: SKView) {
         

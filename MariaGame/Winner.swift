@@ -8,11 +8,11 @@
 import Foundation
 import SpriteKit
 
-class Winner : SKScene {
+class Winner: SKScene {
 
     override func sceneDidLoad() {
         run(Sound.win.action)
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { (timer) in
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { (_) in
             let level1 = GameScene(fileNamed: "Level1")
             self.view?.presentScene(level1)
             self.removeAllActions()

@@ -10,17 +10,17 @@ import AVFoundation
 
 class GameScene: SKScene {
     var index: Int = 0
-    var coinSound = NSURL(fileURLWithPath:Bundle.main.path(forResource: "music", ofType: "wav")!)
+    var coinSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: "music", ofType: "wav")!)
     var audioPlayer = AVAudioPlayer()
     // Nodes
-    var player : SKNode?
-    var joystick : SKNode?
-    var joystickKnob : SKNode?
-    var cameraNode : SKCameraNode?
-    var mountains1 : SKNode?
-    var mountains2 : SKNode?
-    var mountains3 : SKNode?
-    var sun : SKNode?
+    var player: SKNode?
+    var joystick: SKNode?
+    var joystickKnob: SKNode?
+    var cameraNode: SKCameraNode?
+    var mountains1: SKNode?
+    var mountains2: SKNode?
+    var mountains3: SKNode?
+    var sun: SKNode?
     
     // Jump Action
     let jumpUpAction = SKAction.moveBy(x: 0, y: 200, duration: 0.3)
@@ -31,7 +31,7 @@ class GameScene: SKScene {
     var isHit = false
     
     // Measure
-    var knobRadius : CGFloat = 50.0
+    var knobRadius: CGFloat = 50.0
     
     // Score
     let scoreLabel = SKLabelNode()
@@ -42,12 +42,12 @@ class GameScene: SKScene {
     let heartContainer = SKSpriteNode()
     
     // Sprite Engine
-    var previousTimeInterval : TimeInterval = 0
+    var previousTimeInterval: TimeInterval = 0
     var playerIsFacingRight = true
     let playerSpeed = 4.0
     
     // Player state
-    var playerStateMachine : GKStateMachine!
+    var playerStateMachine: GKStateMachine!
     
     // didmove
     override func didMove(to view: SKView) {
@@ -89,7 +89,7 @@ class GameScene: SKScene {
             WalkingState(playerNode: player!),
             IdleState(playerNode: player!),
             LandingState(playerNode: player!),
-            StunnedState(playerNode: player!),
+            StunnedState(playerNode: player!)
         ])
         
         playerStateMachine.enter(IdleState.self)
@@ -101,7 +101,7 @@ class GameScene: SKScene {
         fillHearts(count: 3)
         
         // Timer
-        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) {(timer) in
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) {(_) in
             self.spawnMeteor()
         }
         
@@ -117,7 +117,6 @@ class GameScene: SKScene {
         }
     }
 }
-
 
 // MARK: Touches
 extension GameScene {
@@ -197,15 +196,14 @@ extension GameScene {
         
         let displacement = CGVector(dx: 0.016 * xPosition * playerSpeed, dy: 0)
         let move = SKAction.move(by: displacement, duration: 0)
-        let faceAction : SKAction!
+        let faceAction: SKAction!
         let movingRight = xPosition > 0
         let movingLeft = xPosition < 0
         if movingLeft && playerIsFacingRight {
             playerIsFacingRight = false
             let faceMovement = SKAction.scaleX(to: -1, duration: 0.0)
             faceAction = SKAction.sequence([move, faceMovement])
-        }
-        else if movingRight && !playerIsFacingRight {
+        } else if movingRight && !playerIsFacingRight {
             playerIsFacingRight = true
             let faceMovement = SKAction.scaleX(to: 1, duration: 0.0)
             faceAction = SKAction.sequence([move, faceMovement])
@@ -262,11 +260,10 @@ extension GameScene {
                 let lastHeart = heartsArray[lastElementIndex]
                 lastHeart.removeFromParent()
                 heartsArray.remove(at: lastElementIndex)
-                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { (timer) in
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { (_) in
                     self.isHit = false
                 }
-            }
-            else {
+            } else {
                 dying()
                 showDieScene()
                 
@@ -277,7 +274,7 @@ extension GameScene {
     
     func invincible() {
         player?.physicsBody?.categoryBitMask = 0
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { (timer) in
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { (_) in
             self.player?.physicsBody?.categoryBitMask = 2
         }
     }
@@ -290,7 +287,7 @@ extension GameScene {
     }
     
     func showWinnerScene() {
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {(timer) in
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {(_) in
             let gameOverScene = Winner(fileNamed: "Winner")
             self.view?.presentScene(gameOverScene)
         }
@@ -305,7 +302,7 @@ extension GameScene {
 // MARK: Game Loop
 extension GameScene {
     override func update(_ currentTime: TimeInterval) {
-        movingPlayerAndBackGroundXAxis ()
+        movingPlayerAndBackGroundXAxis()
         
     }
     
@@ -313,13 +310,13 @@ extension GameScene {
 
 // MARK: Collision
 extension GameScene: SKPhysicsContactDelegate {
-    
+
+    enum Masks: Int {
+        case killing, player, reward, ground, win
+        var bitmask: UInt32 { return 1 << self.rawValue }
+    }
+
     struct Collision {
-        
-        enum Masks: Int {
-            case killing, player, reward, ground, win
-            var bitmask: UInt32 { return 1 << self.rawValue }
-        }
         
         let masks: (first: UInt32, second: UInt32)
         
@@ -353,8 +350,7 @@ extension GameScene: SKPhysicsContactDelegate {
                 contact.bodyA.node?.removeFromParent()
                 run(Sound.reward.action)
                 
-            }
-            else if contact.bodyB.node?.name == "computer" {
+            } else if contact.bodyB.node?.name == "computer" {
                 contact.bodyB.node?.physicsBody?.categoryBitMask = 0
                 contact.bodyB.node?.removeFromParent()
                 run(Sound.reward.action)
@@ -375,8 +371,7 @@ extension GameScene: SKPhysicsContactDelegate {
                     showWinnerScene()
                 }
                 
-            }
-            else if contact.bodyB.node?.name == "house" {
+            } else if contact.bodyB.node?.name == "house" {
                 if score >= 1 {
                     contact.bodyA.node?.physicsBody?.categoryBitMask = 0
                     contact.bodyA.node?.removeFromParent()
@@ -384,8 +379,7 @@ extension GameScene: SKPhysicsContactDelegate {
                     showWinnerScene()
                 }
             }
-            
-            
+
         }
         
         if collision.matches(.ground, .killing) {
@@ -419,10 +413,10 @@ extension GameScene {
         let physicsBody = SKPhysicsBody(circleOfRadius: 30)
         node.physicsBody = physicsBody
         
-        physicsBody.categoryBitMask = Collision.Masks.killing.bitmask
-        physicsBody.collisionBitMask = Collision.Masks.player.bitmask | Collision.Masks.ground.bitmask
-        physicsBody.contactTestBitMask = Collision.Masks.player.bitmask | Collision.Masks.ground.bitmask
-        physicsBody.fieldBitMask = Collision.Masks.player.bitmask | Collision.Masks.ground.bitmask
+        physicsBody.categoryBitMask = Masks.killing.bitmask
+        physicsBody.collisionBitMask = Masks.player.bitmask | Masks.ground.bitmask
+        physicsBody.contactTestBitMask = Masks.player.bitmask | Masks.ground.bitmask
+        physicsBody.fieldBitMask = Masks.player.bitmask | Masks.ground.bitmask
         
         physicsBody.affectedByGravity = true
         physicsBody.allowsRotation = false
@@ -444,42 +438,9 @@ extension GameScene {
             SKAction.fadeIn(withDuration: 0.1),
             SKAction.wait(forDuration: 3.0),
             SKAction.fadeOut(withDuration: 0.2),
-            SKAction.removeFromParent(),
+            SKAction.removeFromParent()
         ])
         
         node.run(action)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

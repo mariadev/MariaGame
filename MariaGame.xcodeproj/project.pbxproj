@@ -23,6 +23,7 @@
 		4C137AD925E6D5BF00085054 /* music2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C137AD825E6D5BF00085054 /* music2.wav */; };
 		4C137ADE25E6E64700085054 /* gameOverSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C137ADD25E6E64700085054 /* gameOverSound.wav */; };
 		4C3CFBB825EAD8F90085F165 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C3CFBB725EAD8F90085F165 /* Assets.xcassets */; };
+		4C7B2C332627500A00314AD6 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B2C322627500A00314AD6 /* .swiftlint.yml */; };
 		4CF3C00825E1E33B0084C515 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF3C00725E1E33B0084C515 /* AppDelegate.swift */; };
 		4CF3C00A25E1E33B0084C515 /* Level1.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4CF3C00925E1E33B0084C515 /* Level1.sks */; };
 		4CF3C00C25E1E33B0084C515 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4CF3C00B25E1E33B0084C515 /* Actions.sks */; };
@@ -49,6 +50,7 @@
 		4C137AD825E6D5BF00085054 /* music2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = music2.wav; sourceTree = "<group>"; };
 		4C137ADD25E6E64700085054 /* gameOverSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = gameOverSound.wav; sourceTree = "<group>"; };
 		4C3CFBB725EAD8F90085F165 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4C7B2C322627500A00314AD6 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		4CF3C00425E1E33B0084C515 /* MariaGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MariaGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CF3C00725E1E33B0084C515 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4CF3C00925E1E33B0084C515 /* Level1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level1.sks; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 		4CF3BFFB25E1E33B0084C515 = {
 			isa = PBXGroup;
 			children = (
+				4C7B2C322627500A00314AD6 /* .swiftlint.yml */,
 				4CF3C00625E1E33B0084C515 /* MariaGame */,
 				4CF3C00525E1E33B0084C515 /* Products */,
 			);
@@ -136,6 +139,7 @@
 				4CF3C00025E1E33B0084C515 /* Sources */,
 				4CF3C00125E1E33B0084C515 /* Frameworks */,
 				4CF3C00225E1E33B0084C515 /* Resources */,
+				4C7B2C352627502A00314AD6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -183,6 +187,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C7B2C332627500A00314AD6 /* .swiftlint.yml in Resources */,
 				4C137ACA25E6D18E00085054 /* jumpSound.wav in Resources */,
 				4C137AD925E6D5BF00085054 /* music2.wav in Resources */,
 				4C137ADE25E6E64700085054 /* gameOverSound.wav in Resources */,
@@ -202,6 +207,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4C7B2C352627502A00314AD6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4CF3C00025E1E33B0084C515 /* Sources */ = {
@@ -353,7 +378,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VPQX32MD83;
 				INFOPLIST_FILE = MariaGame/Info.plist;
@@ -372,7 +396,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VPQX32MD83;
 				INFOPLIST_FILE = MariaGame/Info.plist;
