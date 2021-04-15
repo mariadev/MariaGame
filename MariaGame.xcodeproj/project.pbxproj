@@ -24,6 +24,7 @@
 		4C137ADE25E6E64700085054 /* gameOverSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C137ADD25E6E64700085054 /* gameOverSound.wav */; };
 		4C3CFBB825EAD8F90085F165 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C3CFBB725EAD8F90085F165 /* Assets.xcassets */; };
 		4C7B2C332627500A00314AD6 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B2C322627500A00314AD6 /* .swiftlint.yml */; };
+		4C7B2C392627BE8500314AD6 /* ScreenShots in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B2C382627BE8400314AD6 /* ScreenShots */; };
 		4CF3C00825E1E33B0084C515 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF3C00725E1E33B0084C515 /* AppDelegate.swift */; };
 		4CF3C00A25E1E33B0084C515 /* Level1.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4CF3C00925E1E33B0084C515 /* Level1.sks */; };
 		4CF3C00C25E1E33B0084C515 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4CF3C00B25E1E33B0084C515 /* Actions.sks */; };
@@ -51,6 +52,7 @@
 		4C137ADD25E6E64700085054 /* gameOverSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = gameOverSound.wav; sourceTree = "<group>"; };
 		4C3CFBB725EAD8F90085F165 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4C7B2C322627500A00314AD6 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		4C7B2C382627BE8400314AD6 /* ScreenShots */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ScreenShots; sourceTree = "<group>"; };
 		4CF3C00425E1E33B0084C515 /* MariaGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MariaGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CF3C00725E1E33B0084C515 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4CF3C00925E1E33B0084C515 /* Level1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level1.sks; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				4C7B2C322627500A00314AD6 /* .swiftlint.yml */,
 				4CF3C00625E1E33B0084C515 /* MariaGame */,
 				4CF3C00525E1E33B0084C515 /* Products */,
+				4C7B2C382627BE8400314AD6 /* ScreenShots */,
 			);
 			sourceTree = "<group>";
 		};
@@ -192,6 +195,7 @@
 				4C137AD925E6D5BF00085054 /* music2.wav in Resources */,
 				4C137ADE25E6E64700085054 /* gameOverSound.wav in Resources */,
 				4C02836C25EC3AA100C7C725 /* winSound.wav in Resources */,
+				4C7B2C392627BE8500314AD6 /* ScreenShots in Resources */,
 				4C137AB625E6B8E800085054 /* GameOver.sks in Resources */,
 				4C02836825EAEED500C7C725 /* Winner.sks in Resources */,
 				4C137ACD25E6D19200085054 /* levelUpSound.wav in Resources */,
