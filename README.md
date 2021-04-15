@@ -6,5 +6,5 @@ Game made using SpriteKi, a 2D sprite-based framework for games development from
 ## Screenshots
 
 <p float="left">
-<img src="https://github.com/mcipswitch/lacuna-podcasts/Screenshots/game.gif">
+<img src="https://github.com/mariadev/MariaGame/Screenshots/game.gif">
 </p>
