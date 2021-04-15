@@ -29,17 +29,11 @@ class GameViewController: UIViewController {
             view.showsNodeCount = true
         }
     }
-    
-    override var shouldAutorotate: Bool {
-        return true
-    }
-    
+
+    private var orientations = UIInterfaceOrientationMask.landscapeLeft
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
-        } else {
-            return .all
-        }
+        return self.orientations
+
     }
     
     override func didReceiveMemoryWarning() {

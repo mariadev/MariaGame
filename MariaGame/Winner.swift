@@ -9,7 +9,6 @@ import Foundation
 import SpriteKit
 
 class Winner: SKScene {
-
     override func sceneDidLoad() {
         run(Sound.win.action)
         Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { (_) in
